@@ -23,13 +23,13 @@ def ping_isp1(list):
         ping_response1 = subprocess.Popen(["/sbin/ping", "-c2", "-t1", list[0]],
                                          stdout=subprocess.PIPE).stdout.read()
     elif platform == "linux":
-        ping_response1 = subprocess.Popen(["/usr/bin/ping", "-c2", "-W1", list[0]],
+        ping_response1 = subprocess.Popen(["/bin/ping", "-c2", "-W1", list[0]],
                                          stdout=subprocess.PIPE).stdout.read()
     if platform == "darwin":
         ping_response2 = subprocess.Popen(["/sbin/ping", "-c2", "-t1", list[1]],
                                          stdout=subprocess.PIPE).stdout.read()
     elif platform == "linux":
-        ping_response2 = subprocess.Popen(["/usr/bin/ping", "-c2", "-W1", list[1]],
+        ping_response2 = subprocess.Popen(["/bin/ping", "-c2", "-W1", list[1]],
                                          stdout=subprocess.PIPE).stdout.read()
     if "ttl" in str(ping_response1) and "ttl" in str(ping_response2):
         # print("ISP1: Up!")
