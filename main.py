@@ -87,13 +87,13 @@ if __name__ == "__main__":
     while True:
         for section in parser.sections():
             if 'isp' in str(section):
-                list = []
+                iplist = []
                 name = parser.get(section, "name")
                 ip1 = parser.get(section, "ip1")
                 ip2 = parser.get(section, "ip2")
-                list.append(ip1)
-                list.append(ip2)
-                if ping(list):
+                iplist.append(ip1)
+                iplist.append(ip2)
+                if ping(iplist):
                     isp = "up"
                 else:
                     isp = "down"
