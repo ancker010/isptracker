@@ -10,6 +10,8 @@ parser.read("isp-outage-tracker.conf")
 # Set up InfluxDB
 host = parser.get("influxdb", "host")
 port = parser.get("influxdb", "port")
+wait = parser.get("isptracker", "wait")
+count = parser.get("isptracker", "count")
 db = parser.get("influxdb", "db")
 username = parser.get("influxdb", "username")
 password = parser.get("influxdb", "password")
@@ -20,16 +22,16 @@ client.create_retention_policy('awesome_policy', '30d', 3, default=True)
 
 def ping_isp1(list):
     if platform == "darwin":
-        ping_response1 = subprocess.Popen(["/sbin/ping", "-c2", "-t1", list[0]],
+        ping_response1 = subprocess.Popen(["/sbin/ping", f"-c{count}", "-t1", list[0]],
                                          stdout=subprocess.PIPE).stdout.read()
     elif platform == "linux":
-        ping_response1 = subprocess.Popen(["/bin/ping", "-c2", "-W1", list[0]],
+        ping_response1 = subprocess.Popen(["/bin/ping", f"-c{count}", "-W1", list[0]],
                                          stdout=subprocess.PIPE).stdout.read()
     if platform == "darwin":
-        ping_response2 = subprocess.Popen(["/sbin/ping", "-c2", "-t1", list[1]],
+        ping_response2 = subprocess.Popen(["/sbin/ping", f"-c{count}", "-t1", list[1]],
                                          stdout=subprocess.PIPE).stdout.read()
     elif platform == "linux":
-        ping_response2 = subprocess.Popen(["/bin/ping", "-c2", "-W1", list[1]],
+        ping_response2 = subprocess.Popen(["/bin/ping", f"-c{count}", "-W1", list[1]],
                                          stdout=subprocess.PIPE).stdout.read()
     if "ttl" in str(ping_response1) and "ttl" in str(ping_response2):
         # print("ISP1: Up!")
@@ -41,16 +43,16 @@ def ping_isp1(list):
 
 def ping_isp2(list):
     if platform == "darwin":
-        ping_response1 = subprocess.Popen(["/sbin/ping", "-c2", "-t1", list[0]],
+        ping_response1 = subprocess.Popen(["/sbin/ping", f"-c{count}", "-t1", list[0]],
                                           stdout=subprocess.PIPE).stdout.read()
     elif platform == "linux":
-        ping_response1 = subprocess.Popen(["/bin/ping", "-c2", "-W1", list[0]],
+        ping_response1 = subprocess.Popen(["/bin/ping", f"-c{count}", "-W1", list[0]],
                                           stdout=subprocess.PIPE).stdout.read()
     if platform == "darwin":
-        ping_response2 = subprocess.Popen(["/sbin/ping", "-c2", "-t1", list[1]],
+        ping_response2 = subprocess.Popen(["/sbin/ping", f"-c{count}", "-t1", list[1]],
                                           stdout=subprocess.PIPE).stdout.read()
     elif platform == "linux":
-        ping_response2 = subprocess.Popen(["/bin/ping", "-c2", "-W1", list[1]],
+        ping_response2 = subprocess.Popen(["/bin/ping", f"-c{count}", "-W1", list[1]],
                                           stdout=subprocess.PIPE).stdout.read()
     if "ttl" in str(ping_response1) and "ttl" in str(ping_response2):
         # print("ISP2: Up!")
@@ -95,14 +97,16 @@ if __name__ == "__main__":
     # Gather IPs to ping for each ISP
     isp1_name = parser.get("isp1", "name")
     isp1_ip1 = parser.get("isp1", "ip1")
-    isp1_ip1 = parser.get("isp1", "ip2")
+    isp1_ip2 = parser.get("isp1", "ip2")
     isp2_ip1 = parser.get("isp2", "ip1")
-    isp2_ip1 = parser.get("isp2", "ip2")
+    isp2_ip2 = parser.get("isp2", "ip2")
     isp1_list.append(isp1_ip1)
     isp1_list.append(isp1_ip1)
     isp2_name = parser.get("isp2", "name")
     isp2_list.append(isp2_ip1)
     isp2_list.append(isp2_ip1)
+    print(f"Starting up...\n{isp1_name}: {isp1_ip1}, {isp1_ip2}\n{isp2_name}: {isp2_ip1}, {isp2_ip2}\nWait: {wait} - Count{count}")
+    print(f"InfluxDB: {host}:{port} - DB: {db}")
 
     while True:
         if ping_isp1(isp1_list):
@@ -117,4 +121,4 @@ if __name__ == "__main__":
         write_database(isp1_name, isp1)
         write_database(isp2_name, isp2)
         #print(f"{isp1_name}: {isp1} - {isp2_name}: {isp2}")
-        time.sleep(5)
+        time.sleep(wait)

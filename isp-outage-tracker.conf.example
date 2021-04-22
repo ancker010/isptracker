@@ -1,9 +1,14 @@
+[isptracker]
+wait = 5
+count = 2
+
 [influxdb]
 host = 192.168.10.10
 port = 8086
 db = isptracker
 username = user
 password = pass
+wait = 5
 
 [isp1]
 name = cable
