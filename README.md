@@ -5,14 +5,13 @@ The tool will send two (2) ICMP echo (ping) packets to each of the IPs listed fo
 If either or both of these IPs receive a response, then the ISP will be considered "up".
 If both of these IPs do not receive a response, the ISP will be considered "down".
 
-It will write a ISP status every N seconds to InfluxDB, which you can then visualize with Grafana or another graphing tool.
+It will write ISP status every N seconds to InfluxDB, which you can then visualize with Grafana or another graphing tool.
 
 
 #### Usage
 
 - Pull the image: `docker pull hardenrm/isptracker`
 - Copy the example conf file to `isp-outage-tracker.conf` and edit it with your info.
-- NOTE: You may set only two ISPs at this time.  
 - NOTE: You may set only two IPs per ISP at this time.  
 - The script is intended to work with two ISPs, making it automatically work with N ISPs is on the TODO list.
 - You'll need to ensure the IPs you assign to your second ISP are static routed to use that ISP, I expect you already know how to do this with your route.  
@@ -48,6 +47,5 @@ The database name is configurable, but the retention policy is set to `awesome_p
   \
 &nbsp;
 #### TODO
-- Dynamically detect number of ISPs
 - Dynamically detect number of IPs per ISP
 - Create a more dynamic Grafana Dashboard

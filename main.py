@@ -10,8 +10,8 @@ parser.read("isp-outage-tracker.conf")
 # Set up InfluxDB
 host = parser.get("influxdb", "host")
 port = parser.get("influxdb", "port")
-wait = parser.get("isptracker", "wait")
-count = parser.get("isptracker", "count")
+wait = parser.get("config", "wait")
+count = parser.get("config", "count")
 db = parser.get("influxdb", "db")
 username = parser.get("influxdb", "username")
 password = parser.get("influxdb", "password")
@@ -20,45 +20,25 @@ client.create_database(db)
 client.create_retention_policy('awesome_policy', '30d', 3, default=True)
 
 
-def ping_isp1(list):
-    if platform == "darwin":
-        ping_response1 = subprocess.Popen(["/sbin/ping", f"-c{count}", "-t1", list[0]],
-                                         stdout=subprocess.PIPE).stdout.read()
-    elif platform == "linux":
-        ping_response1 = subprocess.Popen(["/bin/ping", f"-c{count}", "-W1", list[0]],
-                                         stdout=subprocess.PIPE).stdout.read()
-    if platform == "darwin":
-        ping_response2 = subprocess.Popen(["/sbin/ping", f"-c{count}", "-t1", list[1]],
-                                         stdout=subprocess.PIPE).stdout.read()
-    elif platform == "linux":
-        ping_response2 = subprocess.Popen(["/bin/ping", f"-c{count}", "-W1", list[1]],
-                                         stdout=subprocess.PIPE).stdout.read()
-    if "ttl" in str(ping_response1) and "ttl" in str(ping_response2):
-        # print("ISP1: Up!")
+def ping(list):
+    updown = []
+    for ip in list:
+        if platform == "darwin":
+            ping_response = subprocess.Popen(["/sbin/ping", f"-c{count}", "-t1", list[0]],
+                                             stdout=subprocess.PIPE).stdout.read()
+        elif platform == "linux":
+            ping_response = subprocess.Popen(["/bin/ping", f"-c{count}", "-W1", list[0]],
+                                             stdout=subprocess.PIPE).stdout.read()
+        if "ttl" in str(ping_response):
+            updown.append("up")
+        else:
+            updown.append("down")
+
+    if "up" in updown:
+        # print("Up!")
         return True
     else:
-        # print("ISP1: Down!")
-        return False
-
-
-def ping_isp2(list):
-    if platform == "darwin":
-        ping_response1 = subprocess.Popen(["/sbin/ping", f"-c{count}", "-t1", list[0]],
-                                          stdout=subprocess.PIPE).stdout.read()
-    elif platform == "linux":
-        ping_response1 = subprocess.Popen(["/bin/ping", f"-c{count}", "-W1", list[0]],
-                                          stdout=subprocess.PIPE).stdout.read()
-    if platform == "darwin":
-        ping_response2 = subprocess.Popen(["/sbin/ping", f"-c{count}", "-t1", list[1]],
-                                          stdout=subprocess.PIPE).stdout.read()
-    elif platform == "linux":
-        ping_response2 = subprocess.Popen(["/bin/ping", f"-c{count}", "-W1", list[1]],
-                                          stdout=subprocess.PIPE).stdout.read()
-    if "ttl" in str(ping_response1) and "ttl" in str(ping_response2):
-        # print("ISP2: Up!")
-        return True
-    else:
-        # print("ISP2: Down!")
+        # print("Down!")
         return False
 
 
@@ -92,33 +72,32 @@ def write_database(isp, status):
 
 
 if __name__ == "__main__":
-    isp1_list = []
-    isp2_list = []
-    # Gather IPs to ping for each ISP
-    isp1_name = parser.get("isp1", "name")
-    isp1_ip1 = parser.get("isp1", "ip1")
-    isp1_ip2 = parser.get("isp1", "ip2")
-    isp2_ip1 = parser.get("isp2", "ip1")
-    isp2_ip2 = parser.get("isp2", "ip2")
-    isp1_list.append(isp1_ip1)
-    isp1_list.append(isp1_ip1)
-    isp2_name = parser.get("isp2", "name")
-    isp2_list.append(isp2_ip1)
-    isp2_list.append(isp2_ip1)
-    print(f"Starting up...\n{isp1_name}: {isp1_ip1}, {isp1_ip2}\n{isp2_name}: {isp2_ip1}, {isp2_ip2}\nWait: {wait} - Count: {count}")
+    # Print some startup messages...
+    print(f"Starting up...\nWait: {wait} - Count: {count}")
     print(f"InfluxDB: {host}:{port} - DB: {db}")
 
-    while True:
-        if ping_isp1(isp1_list):
-            isp1 = "up"
+    # Print info for each ISP...
+    for section in parser.sections():
+        if 'isp' in str(section):
+            print(parser.get(section, "name") + ": " + parser.get(section, "ip1") + ", " + parser.get(section, "ip2"))
         else:
-            isp1 = "down"
-        if ping_isp2(isp2_list):
-            isp2 = "up"
-        else:
-            isp2 = "down"
+            continue
 
-        write_database(isp1_name, isp1)
-        write_database(isp2_name, isp2)
-        #print(f"{isp1_name}: {isp1} - {isp2_name}: {isp2}")
+    # Do the stuff.
+    while True:
+        for section in parser.sections():
+            if 'isp' in str(section):
+                list = []
+                name = parser.get(section, "name")
+                ip1 = parser.get(section, "ip1")
+                ip2 = parser.get(section, "ip2")
+                list.append(ip1)
+                list.append(ip2)
+                if ping(list):
+                    isp = "up"
+                else:
+                    isp = "down"
+                #print(f"{name}: is {isp}!")
+                write_database(name, isp)
+
         time.sleep(int(wait))
