@@ -2,6 +2,7 @@ FROM python:3
 
 RUN pip install pipenv
 RUN apt-get update
+RUN apt-get install ping
 RUN pip install configparser
 RUN pip install influxdb
 WORKDIR /app
