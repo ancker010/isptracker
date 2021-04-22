@@ -33,7 +33,7 @@ The database name is configurable, but the retention policy is set to `awesome_p
 - Copy the contents of the `sample-dashboard.json` file and import it into your Grafana install.
 - You may need to tweak things slightly as I haven't set up the dashboard to be very dynamic.
 
-[[https://github.com/ancker010/isptracker/blob/main/assets/isptracker-sample-screenshot.png|alt=sample]]
+<a href="https://github.com/ancker010/isptracker/raw/main/assets/isptracker-sample-screenshot.png"><img src="https://github.com/ancker010/isptracker/raw/main/assets/isptracker-sample-screenshot.png" align="left" height="150"></a>
 
 
 #### TODO
