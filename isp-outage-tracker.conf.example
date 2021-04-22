@@ -8,7 +8,6 @@ port = 8086
 db = isptracker
 username = user
 password = pass
-wait = 5
 
 [isp1]
 name = cable
