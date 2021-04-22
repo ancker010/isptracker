@@ -105,7 +105,7 @@ if __name__ == "__main__":
     isp2_name = parser.get("isp2", "name")
     isp2_list.append(isp2_ip1)
     isp2_list.append(isp2_ip1)
-    print(f"Starting up...\n{isp1_name}: {isp1_ip1}, {isp1_ip2}\n{isp2_name}: {isp2_ip1}, {isp2_ip2}\nWait: {wait} - Count{count}")
+    print(f"Starting up...\n{isp1_name}: {isp1_ip1}, {isp1_ip2}\n{isp2_name}: {isp2_ip1}, {isp2_ip2}\nWait: {wait} - Count: {count}")
     print(f"InfluxDB: {host}:{port} - DB: {db}")
 
     while True:

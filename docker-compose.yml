@@ -3,12 +3,12 @@ services:
   netgear-scrapers:
     image: hardenrm/isptracker
     networks:
-      - traefik-ext
-    container_name: isptracker-d1
+      - default
+    container_name: isptracker
     volumes:
       - '/storage/docker/isptracker/isp-outage-tracker.conf:/app/isp-outage-tracker.conf:z'
     restart: unless-stopped
 
 networks:
-  traefik-ext:
+  default:
     external: true
