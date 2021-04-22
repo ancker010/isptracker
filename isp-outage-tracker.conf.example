@@ -1,0 +1,16 @@
+[influxdb]
+host = 192.168.10.10
+port = 8086
+db = isptracker
+username = user
+password = pass
+
+[isp1]
+name = cable
+ip1 = 8.8.8.8
+ip2 = 1.1.1.1
+
+[isp2]
+name = lte
+ip1 = 8.8.4.4
+ip2 = 1.0.0.1
