@@ -2,7 +2,7 @@ FROM python:3-alpine
 
 RUN pip install pipenv
 RUN apk update
-RUN apk install iputils
+RUN apk add iputils
 RUN pip install configparser
 RUN pip install influxdb
 WORKDIR /app
