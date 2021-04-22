@@ -2,7 +2,6 @@ name: docker-build-and-push
 
 on:
   push:
-    branches: main
     tags:
       - 'v*.*.*'
 
