@@ -32,10 +32,21 @@ The database name is configurable, but the retention policy is set to `awesome_p
 - Create a datasource that defaults to use the database name you set in the conf file.
 - Copy the contents of the `sample-dashboard.json` file and import it into your Grafana install.
 - You may need to tweak things slightly as I haven't set up the dashboard to be very dynamic.
-
+\
+&nbsp;
 <a href="https://github.com/ancker010/isptracker/raw/main/assets/isptracker-sample-screenshot.png"><img src="https://github.com/ancker010/isptracker/raw/main/assets/isptracker-sample-screenshot.png" align="left" height="150"></a>
-
-
+\
+&nbsp;
+  \
+&nbsp;
+  \
+&nbsp;
+  \
+&nbsp;
+  \
+&nbsp;
+  \
+&nbsp;
 #### TODO
 - Dynamically detect number of ISPs
 - Dynamically detect number of IPs per ISP
