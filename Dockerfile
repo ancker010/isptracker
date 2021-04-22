@@ -6,7 +6,7 @@ RUN pip install configparser
 RUN pip install influxdb
 WORKDIR /app
 
-COPY isp-outage-tracker.conf .
+COPY isp-outage-tracker.conf.example .
 
 COPY . .
 
