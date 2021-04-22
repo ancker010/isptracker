@@ -121,4 +121,4 @@ if __name__ == "__main__":
         write_database(isp1_name, isp1)
         write_database(isp2_name, isp2)
         #print(f"{isp1_name}: {isp1} - {isp2_name}: {isp2}")
-        time.sleep(wait)
+        time.sleep(int(wait))
