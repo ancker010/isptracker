@@ -118,6 +118,5 @@ if __name__ == "__main__":
                     print(f"{name}: is {isp}!")
                 if debug == 0:
                     write_database(name, isp)
-                    print("Writing...")
 
         time.sleep(int(wait))
