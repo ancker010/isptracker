@@ -49,4 +49,4 @@ The database name is configurable, but the retention policy is set to `awesome_p
 &nbsp;
 #### TODO
 - Dynamically detect number of IPs per ISP
-- Create a more dynamic Grafana Dashboard
+- Anything else?

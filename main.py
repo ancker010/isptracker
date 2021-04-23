@@ -4,7 +4,7 @@ import time
 from configparser import ConfigParser
 from influxdb import InfluxDBClient
 
-## set up InfluxDB Connection
+# set up InfluxDB Connection
 parser = ConfigParser()
 parser.read("isp-outage-tracker.conf")
 # Set up InfluxDB
@@ -58,7 +58,7 @@ def write_database(isp, status):
 
     point[0]['fields']['percent_packet_loss']=percent_packet_loss
 
-    #Tries to write to the database
+    # Tries to write to the database
     success = False
     while not success:
         try:
@@ -67,7 +67,7 @@ def write_database(isp, status):
         except:
             print("An exception occurred while writing to database")
             success = False
-            #Waits 1 sec before next try
+            # Waits 1 sec before next try
             time.sleep(1)
 
 
