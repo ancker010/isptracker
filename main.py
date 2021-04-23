@@ -26,14 +26,14 @@ else:
 
 
 def ping(list):
-    global debug
+    global debug, count
     updown = []
     for ip in list:
         if platform == "darwin":
             ping_response = subprocess.Popen(["/sbin/ping", f"-c{count}", "-t1", ip],
                                              stdout=subprocess.PIPE).stdout.read()
         elif platform == "linux":
-            ping_response = subprocess.Popen(["/bin/ping", f"-c{count}", "-W1", ip],
+            ping_response = subprocess.Popen(["/bin/ping", f"-c{count}", "-i0.2", "-W1", ip],
                                              stdout=subprocess.PIPE).stdout.read()
         if debug == 1:
             print(ping_response)
