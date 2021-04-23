@@ -7,6 +7,7 @@ If both of these IPs do not receive a response, the ISP will be considered "down
 
 It will write ISP status every N seconds to InfluxDB, which you can then visualize with Grafana or another graphing tool.
 
+NOTE: This *should* support IPv6 addresses *IF* your docker setup is configured for IPv6. I need to test this.
 
 #### Usage
 
