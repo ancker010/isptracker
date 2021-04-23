@@ -7,38 +7,48 @@ from influxdb import InfluxDBClient
 # set up InfluxDB Connection
 parser = ConfigParser()
 parser.read("isp-outage-tracker.conf")
+wait = parser.get("config", "wait")
+count = parser.get("config", "count")
+debug = parser.get("config", "debug")
 # Set up InfluxDB
 host = parser.get("influxdb", "host")
 port = parser.get("influxdb", "port")
-wait = parser.get("config", "wait")
-count = parser.get("config", "count")
 db = parser.get("influxdb", "db")
 username = parser.get("influxdb", "username")
 password = parser.get("influxdb", "password")
 client = InfluxDBClient(host, port, username, password, db)
 client.create_database(db)
 client.create_retention_policy('awesome_policy', '30d', 3, default=True)
+if debug == "1":
+    debug = True
+else:
+    debug = False
 
 
 def ping(list):
+    global debug
     updown = []
     for ip in list:
         if platform == "darwin":
-            ping_response = subprocess.Popen(["/sbin/ping", f"-c{count}", "-t1", list[0]],
+            ping_response = subprocess.Popen(["/sbin/ping", f"-c{count}", "-t1", ip],
                                              stdout=subprocess.PIPE).stdout.read()
         elif platform == "linux":
-            ping_response = subprocess.Popen(["/bin/ping", f"-c{count}", "-W1", list[0]],
+            ping_response = subprocess.Popen(["/bin/ping", f"-c{count}", "-W1", ip],
                                              stdout=subprocess.PIPE).stdout.read()
+        if debug == 1:
+            print(ping_response)
         if "ttl" in str(ping_response):
             updown.append("up")
         else:
             updown.append("down")
 
     if "up" in updown:
-        # print("Up!")
+        if debug == 1:
+            print("Up!")
         return True
     else:
-        # print("Down!")
+        if debug == 1:
+            print("Down!")
         return False
 
 
@@ -83,21 +93,31 @@ if __name__ == "__main__":
         else:
             continue
 
+    isplist = []
+    for section in parser.sections():
+        if 'isp' in str(section):
+            isplist.append(str(section))
+
     # Do the stuff.
     while True:
-        for section in parser.sections():
-            if 'isp' in str(section):
+        for section in isplist:
+            if 'isp' in section:
                 iplist = []
                 name = parser.get(section, "name")
                 ip1 = parser.get(section, "ip1")
                 ip2 = parser.get(section, "ip2")
                 iplist.append(ip1)
                 iplist.append(ip2)
+                if debug == 1:
+                    print(f"{name}: {iplist}")
                 if ping(iplist):
                     isp = "up"
                 else:
                     isp = "down"
-                #print(f"{name}: is {isp}!")
-                write_database(name, isp)
+                if debug == 1:
+                    print(f"{name}: is {isp}!")
+                if debug == 0:
+                    write_database(name, isp)
+                    print("Writing...")
 
         time.sleep(int(wait))

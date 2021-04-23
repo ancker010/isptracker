@@ -14,6 +14,7 @@ It will write ISP status every N seconds to InfluxDB, which you can then visuali
 - Copy the example conf file to `isp-outage-tracker.conf` and edit it with your info.
 - NOTE: You can name the ISP sections whatever you want as long as they contain the string `isp`.  
 - NOTE: You may set only two IPs per ISP at this time.  
+- NOTE: The `debug` setting will turn on verbose output and NOT write to InfluxDB.  (0 = off, 1 = on)
 - The script is intended to work with two ISPs, making it automatically work with N ISPs is on the TODO list.
 - You'll need to ensure the IPs you assign to your second ISP are static routed to use that ISP, I expect you already know how to do this with your route.  
 - Run the container: `docker run -v '/path/to/isp-outage-tracker.conf:/app/isp-outage-tracker.conf:z' --name isptracker hardenrm/isptracker`

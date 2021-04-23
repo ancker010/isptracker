@@ -1,6 +1,7 @@
 [config]
 wait = 5
 count = 2
+debug = 0
 
 [influxdb]
 host = 192.168.10.10
